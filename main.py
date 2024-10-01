@@ -1,19 +1,56 @@
 import requests
-import json
+import os
+from pydantic import BaseModel, ValidationError, HttpUrl
+from dotenv import load_dotenv
+from typing import List
+
+load_dotenv('/Users/alexcox/Documents/GitHub/AD1-Fitness/.env')
+api_key = os.getenv('API_KEY')
 
 # Base URL for ExerciseDB API
-BASE_URL = "https://exercisedb.p.rapidapi.com"
+EXERCISEDB_BASE_URL = "https://exercisedb.p.rapidapi.com"
 
 # Replace with your actual headers for API access
-HEADERS = {
-    'x-rapidapi-key': 'YOUR_API_KEY',
+RAPID_API_HEADERS = {
+    'x-rapidapi-key': 'api_key',
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
 }
+# Placeholder for the current workout being built
+current_workout = []
+
+# Pydantic model for Exercise
+class Exercise(BaseModel):
+    bodyPart: str
+    equipment: str
+    gifUrl: HttpUrl
+    id: str
+    name: str
+    target: str
+    secondaryMuscles: List[str]
+    instructions: List[str]
+
+def ping_exercisedb_api(url):
+    try:
+        response = requests.get(url, headers=RAPID_API_HEADERS)
+        
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("API status: Online")
+                return data
+            except ValueError as json_error:
+                print(f"Failed to parse JSON: {json_error}")
+                return None
+        else:
+            print(f"Failed request. Status code: {response.status_code}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Request failed: {e}")
+        return None
 
 # Main function to create a new workout
 def create_new_workout():
-    print("Creating a new workout...")
-    # Call the search_for_exercises function to begin searching for exercises
+    print("Creating a new workout")
     search_for_exercises()
 
 # Function to search for exercises
@@ -37,52 +74,89 @@ def search_for_exercises():
         search_by_equipment(equipment)
     elif choice == '4':
         target = input("Enter target muscle group: ")
-        search_by_target_muscle_group(target)
+        search_by_target_muscle(target)
     else:
         print("Invalid choice. Please try again.")
         search_for_exercises()
 
 # Function to search exercises by name
 def search_by_exercise_name(name):
-    pass
+    url = f"{EXERCISEDB_BASE_URL}/exercises/name/{name}"
+    exercises = ping_exercisedb_api(url)
+    if exercises:
+        validate_and_display_exercises(exercises)
 
 # Function to search exercises by body part
 def search_by_body_part(body_part):
-    pass
+    url = f"{EXERCISEDB_BASE_URL}/exercises/bodyPart/{body_part}"
+    exercises = ping_exercisedb_api(url)
+    if exercises:
+        validate_and_display_exercises(exercises)
+
 # Function to search exercises by equipment used
 def search_by_equipment(equipment):
-   pass
+    url = f"{EXERCISEDB_BASE_URL}/exercises/equipment/{equipment}"
+    exercises = ping_exercisedb_api(url)
+    if exercises:
+        validate_and_display_exercises(exercises)
 
 # Function to search exercises by target muscle group
-def search_by_target_muscle_group(target):
-    pass
+def search_by_target_muscle(target):
+    url = f"{EXERCISEDB_BASE_URL}/exercises/target/{target}"
+    exercises = ping_exercisedb_api(url)
+    if exercises:
+        validate_and_display_exercises(exercises)
 
-# Function to display the list of exercises returned by API
-def display_exercises(exercises):
-    pass
+# Validate and display exercises using Pydantic
+def validate_and_display_exercises(exercises: List[dict]):
+    print("\nExercises Found:")
+    for i, exercise_data in enumerate(exercises, start=1):
+        try:
+            exercise = Exercise(**exercise_data)
+            print(f"{i}. {exercise.name}")
+            print(f"   - Body Part: {exercise.bodyPart}")
+            print(f"   - Equipment: {exercise.equipment}")
+            print(f"   - Target Muscle: {exercise.target}")
+            print(f"   - GIF URL: {exercise.gifUrl}")
 
+        except ValidationError as e:
+            print(f"Error validating exercise data: {e}")
+        
 # Function to add selected exercise to the current workout
 def add_exercise_to_workout(exercise):
-    pass
+    # This could be stored locally or in a list
+    current_workout.append(exercise)
+    print(f"{exercise['name']} added to your workout.")
 
 # Function to modify an existing workout
 def modify_existing_workout():
-    pass
+    print("Loading existing workout...")
+    # Load from saved file or session
+    load_workout()
 
 def load_workout():
-   pass
+    # Simulate loading a workout (from file, db, etc.)
+    pass
 
 # Function to customize the weekly workout plan
 def customize_weekly_workout_plan():
+    print("Customizing weekly workout plan...")
+    # Customization logic (sets, reps, etc.)
     pass
 
 # Function to export the workout plan
 def export_workout_plan():
-    pass
+    print("Exporting workout plan...")
+    # Create export format
+    export_to_txt(current_workout)
 
-current_workout = []
+def export_to_txt(workout):
+    with open('workout_plan.txt', 'w') as f:
+        for exercise in workout:
+            f.write(f"{exercise['name']} - {exercise['sets']} sets, {exercise['reps']} reps\n")
+    print("Workout plan exported to workout_plan.txt")
 
+# Main entry point for the application
 if __name__ == "__main__":
-
-    # Starting point of the application
-    create_new_workout()
+        print("Welcome to the Workout Plan App!")
+        create_new_workout()  
