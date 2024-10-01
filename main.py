@@ -1,12 +1,12 @@
 import requests
 import os
 from dotenv import load_dotenv
-from typing import List, Optional
+from typing import List
 from pydantic import ValidationError
 from exercise import search_exercise_menu, bodyPartTarget, equipmentUsed, targetMuscle
-from workout import Workout
+from workout import Workout, workout_menu
 
-load_dotenv('/path/to/your/.env')  # Adjust the path as needed
+load_dotenv("C:/Users/alexcox/Documents/GitHub/AD1-Fitness/.env")
 api_key = os.getenv('API_KEY')
 workouts: List[Workout] = []
 EXERCISEDB_BASE_URL = "https://exercisedb.p.rapidapi.com"
@@ -46,7 +46,7 @@ def search_exr_by_name(name):
         url = f"{EXERCISEDB_BASE_URL}/exercises/name/{name}"
         exercises = get_exercise_api(url)
         if exercises:
-            display_exercises(exercises)
+            return exercises
     except ValidationError as e:
         print(f"Not found")
 
@@ -57,7 +57,7 @@ def search_exr_by_body_part(body_part):
         url = f"{EXERCISEDB_BASE_URL}/exercises/bodyPart/{body_part}"
         exercises = get_exercise_api(url)
         if exercises:
-            display_exercises(exercises)
+            return exercises
 
 # Function to search exercises by equipment used
 def search_exr_by_equipment(equipment):
@@ -66,7 +66,7 @@ def search_exr_by_equipment(equipment):
         url = f"{EXERCISEDB_BASE_URL}/exercises/equipment/{equipment}"
         exercises = get_exercise_api(url)
         if exercises:
-            display_exercises(exercises)
+            return exercises
   
 # Function to search exercises by target muscle group
 def search_exr_by_target_muscle(target):
@@ -75,13 +75,4 @@ def search_exr_by_target_muscle(target):
         url = f"{EXERCISEDB_BASE_URL}/exercises/target/{target}"
         exercises = get_exercise_api(url)
         if exercises:
-            display_exercises(exercises)
-
-# Validate and display exercises using Pydantic
-def display_exercises(exercises: List[dict]):
-    print("\nExercises Found:")
-    for i, exercise_data in enumerate(exercises, start=1):
-        try:
-            print*(f"\nExercise {i}:")
-        except ValidationError as e:
-            print(f"Error validating exercise data: {e}")
+            return exercises
