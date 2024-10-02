@@ -1,5 +1,5 @@
 from typing import List
-from exercise import Exercise, search_exercise_menu
+from exercise import Exercise
 
 class Workout:
     def __init__(self, name: str):
@@ -31,26 +31,4 @@ class Workout:
         for exercise in self.exercises:
             workout_summary += f"{exercise}\n"
         return workout_summary
-
-def workout_menu(workout: Workout):
-    while True:
-        print(f"""\nModifying Workout: {workout.name}
-                \n 1. Add Exercise
-                \n 2. Remove Exercise
-                \n 3. View Exercises
-                \n 4. Back to Main Menu""")
-        choice = input("Enter your choice: ")
-
-        if choice == '1':
-            exercise = search_exercise_menu() 
-            if exercise:
-                workout.add_exercise_from_workout(exercise)
-        elif choice == '2':
-            exercise_name = input("Enter the name of the exercise to remove: ") 
-            workout.remove_exercise_from_workout(exercise_name)
-        elif choice == '3':
-            workout.display_workout()
-        elif choice == '4':
-            break
-        else:
-            print("Invalid choice. Please try again.")
+    

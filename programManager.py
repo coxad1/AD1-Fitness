@@ -19,7 +19,7 @@ class ProgramManager:
         self.list_programs()
         choice = int(input("Enter program ID: "))  
         if 0 < choice <= len(self.programs):
-            return self.program_menu(self.programs[choice - 1])
+            return self.programs[choice - 1]
         else:
             print("Invalid ID. Please try again.")
 
@@ -28,7 +28,8 @@ class ProgramManager:
             self.list_programs()
             choice = input("""\n 1. Create Program
                               \n 2. Select Program
-                              \n 3. Exit """)
+                              \n 3. Exit \n """)
+            
             if choice == '1': self.create_program()
             elif choice == '2': self.select_program()
             elif choice == '3': break

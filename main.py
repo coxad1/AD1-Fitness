@@ -4,10 +4,15 @@ from dotenv import load_dotenv
 from pydantic import ValidationError
 from exercise import Exercise
 from programManager import ProgramManager
+from workout import Workout
 
-load_dotenv("C:/Users/alexcox/Documents/GitHub/AD1-Fitness/.env")
+bodyPartTarget = ["back", "cardio", "chest", "lower arms", "lower legs", "neck", "shoulders", "upper arms", "upper legs", "waist"]
+equipmentUsed = ["assisted", "band", "barbell", "body weight", "bosu ball", "cable", "dumbbell", "elliptical machine", "ez barbell", "hammer", "kettlebell", "leverage machine", "medicine ball", "olympic barbell", "resistance band", "roller", "rope", "skierg machine", "sled machine", "smith machine", "stability ball", "stationary bike", "stepmill machine", "tire", "trap bar", "upper body ergometer", "weighted", "wheel roller"]
+targetMuscle = ["abductors", "abs", "adductors", "biceps", "calves", "cardiovascular system", "delts", "forearms", "glutes", "hamstrings", "lats", "levator scapulae", "pectorals", "quads", "serratus anterior", "spine", "traps", "triceps", "upper back"]
+
+load_dotenv()
 exercise_db_api_key = os.getenv('API_KEY')
-
+print(exercise_db_api_key)
 EXERCISEDB_BASE_URL = "https://exercisedb.p.rapidapi.com"
 RAPID_API_HEADERS = {
     'x-rapidapi-key': exercise_db_api_key,
@@ -27,16 +32,11 @@ def get_exercise_api(url):
 # Function to search exercises by name
 def search_exr_by_name():
     name = input("What exercise would you like to search for? ")
-    try:
-        url = f"{EXERCISEDB_BASE_URL}/exercises/name/{name.lower()}"
-        exercises = get_exercise_api(url)
-        if exercises:
-            for exercise in exercises:
-                print(f"Found: {exercise['name']} - Target: {exercise['target']}")
-        else:
-            print("No exercises found.")
-    except ValidationError as e:
-        print(f"Error: {e}")
+    url = f"{EXERCISEDB_BASE_URL}/exercises/name/{name.lower()}"
+    exercises = get_exercise_api(url)
+    for exercise in exercises:
+            print(f"Found: {exercise['name']} - Target: {exercise['target']}")
+    else: print("No exercises found.")
 
 # Function to search exercises by body part
 def search_exr_by_body_part():
@@ -84,10 +84,16 @@ def search_exercise_menu():
         choice = input("Enter your choice: ")
 
         if choice == '1':
+            for body_part in bodyPartTarget:
+                print(body_part.capitalize())
             search_exr_by_body_part()
         elif choice == '2':
+            for equipment in equipmentUsed:
+                print(equipment.capitalize())
             search_exr_by_equipment()
         elif choice == '3':
+            for target in targetMuscle:
+                print(target.capitalize())
             search_exr_by_target_muscle()
         elif choice == '4':
             search_exr_by_name()
@@ -96,16 +102,41 @@ def search_exercise_menu():
         else:
             print("Invalid choice. Please try again.")
 
+def workout_menu(workout: Workout):
+
+    while True:
+        print(f"""\nModifying Workout: {workout.name}
+                \n 1. Add Exercise
+                \n 2. Remove Exercise
+                \n 3. View Exercises
+                \n 4. Back to Main Menu""")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            exercise = search_exercise_menu() 
+            if exercise:
+                workout.add_exercise_from_workout(exercise)
+        elif choice == '2':
+            exercise_name = input("Enter the name of the exercise to remove: ") 
+            workout.remove_exercise_from_workout(exercise_name)
+        elif choice == '3':
+            workout.display_workout()
+        elif choice == '4':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
 # Main menu
 def main():
     program_manager = ProgramManager()  # Initialize Program Manager
+    url = f"{EXERCISEDB_BASE_URL}/status"
 
     while True:
         print("""\n=== Main Menu ===
-              \n 1. Manage Programs
-              \n 2. Manage Workouts
-              \n 3. Search Exercises
-              \n 4. Exit""")
+            \n 1. Manage Programs
+            \n 2. Manage Workouts
+            \n 3. Search Exercises
+            \n 4. Exit \n""")
 
         choice = input("Enter your choice: ")
 
