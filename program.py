@@ -1,47 +1,35 @@
-from typing import Dict, Optional
+from prettytable import PrettyTable
 from workout import Workout
-Days_Of_Week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
 class Program:
-    def __init__(self, name: str, program_id: int):
-        self.name = name
-        self.id = program_id
-        self.workouts = []
+    def __init__(self, name, program_id):
+        self.name, self.id, self.weekly_plan = name, program_id, {day: None for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}
 
-    def create_workout(self):
+    def add_workout(self, day):
         workout_name = input("Enter workout name: ")
-        new_workout = Workout(workout_name)
-        self.workouts.append(new_workout)
-        print(f"Workout '{workout_name}' created.")
+        self.weekly_plan[day] = Workout(workout_name)
+        print(f"Workout '{workout_name}' added to {day}.")
+        self.weekly_plan[day].workout_menu()
 
-    def list_workouts(self):
-        if not self.workouts:
-            print("No workouts available.")
-        else:
-            for workout in self.workouts:
-                print(f"Workout: {workout.name}")
+    def display_weekly_program(self):
+        table = PrettyTable()
+        table.field_names = ["Day", "Workout"]
+        for day, workout in self.weekly_plan.items():
+            if workout:
+                table.add_row([day, workout.name])
+            else:
+                table.add_row([day, "No workout scheduled"])
+        print(table)
 
     def program_menu(self):
         while True:
-            print(f""""\nProgram Menu for {self.name} 
-                \n 1. Create Workout
-                \n 2. List Workouts
-                \n 3. Modify Workout
-                \n 4. Back to Main Menu""")
-            choice = input("Enter your choice: ")
-
-            if choice == '1': self.create_workout()
-            elif choice == '2': self.list_workouts()
+            choice = input(""""\n1. Add Workout
+                           \n2. View Program
+                           \n3. Back
+                           \nChoose: """)
+            if choice == '1':
+                self.add_workout(input("Enter day: "))
+            elif choice == '2':
+                self.display_weekly_program()
             elif choice == '3':
-                if self.workouts:
-                    workout_name = input("Enter workout name to modify: ")
-                    for workout in self.workouts:
-                        if workout.name == workout_name:
-                            workout.workout_menu()
-                            break
-                    else: print("Workout not found.")
-                else: print("No workouts available.")
-            elif choice == '4':break
-            else:print("Invalid choice. Please try again.")
-
-            
+                break
