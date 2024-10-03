@@ -1,49 +1,36 @@
+# workout.py
+from pydantic import BaseModel
 from typing import List
 from exercise import Exercise
 from prettytable import PrettyTable
 
-class Workout:
-    def __init__(self, name: str):
-        self.name = name
-        self.exercises: List[Exercise] = []
+class Workout(BaseModel):
+    name: str
+    exercises: List[Exercise] = []
 
-    def insert_exercise_into_workout(self, exercise: Exercise):
+    def add_exercise(self, exercise: Exercise):
+        if any(ex.name.lower() == exercise.name.lower() for ex in self.exercises):
+            print(f"Exercise '{exercise.name}' is already in the workout.")
+            return
         self.exercises.append(exercise)
         print(f"Exercise '{exercise.name}' added to the workout.")
 
-    def erase_exercise_from_workout(self, exercise_name: str):
-        for exercise in self.exercises:
-            if exercise.name == exercise_name: 
-                self.exercises.remove(exercise)
-                print(f"Exercise '{exercise_name}' removed from the workout.")
-                return
-        print(f"Exercise '{exercise_name}' not found in the workout.")
+    def remove_exercise(self, index: int):
+        if 0 <= index < len(self.exercises):
+            removed = self.exercises.pop(index)
+            print(f"Exercise '{removed.name}' removed from the workout.")
+        else:
+            print("Invalid exercise index.")
 
     def display_exercises(self):
-            if self.exercises:
-                table = PrettyTable()
-                table.field_names = ["Exercise"]
-                for exercise in self.exercises:
-                    table.add_row([exercise])
-                print(table)
-            else:
-                print("No exercises.")
+        if not self.exercises:
+            print("No exercises in this workout.")
+            return
+        table = PrettyTable()
+        table.field_names = ["Index", "Name", "Target Muscle", "Body Part"]
+        for idx, exercise in enumerate(self.exercises, start=1):
+            table.add_row([idx, exercise.name.capitalize(), exercise.target.capitalize(), exercise.bodyPart.capitalize()], divider=True)
+        print(table)
 
     def __str__(self):
-        workout_summary = f"Workout: {self.name}\n"
-        for exercise in self.exercises:
-            workout_summary += f"{exercise}\n"
-        return workout_summary
-    
-    def workout_menu(self):
-        while True:
-            choice = input("""\n1. Add Exercise to Workout
-                           \n2. Erase Exercise from Workout
-                           \n3. View Exercises in Workout
-                           \n4. Exit: """)
-            if choice == '1': self.insert_exercise_into_workout()
-            elif choice == '2': self.erase_exercise_from_workout()
-            elif choice == '3': self.display_exercises()
-            elif choice == '4': break
-
-    
+        return f"Workout: {self.name.capitalize()} with {len(self.exercises)} exercises."

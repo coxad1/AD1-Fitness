@@ -11,5 +11,7 @@ class Exercise(BaseModel):
     secondaryMuscles: List[str]
     instructions: List[str]
 
-def __str__(self):
-    return f"\n{self.name.capitalize()} - Target: {self.target.capitalize()}\n"
+    def __str__(self):
+        return (f"\n{self.name.capitalize()} - Target: {self.target.capitalize()}\n"
+                f"Body Part: {self.bodyPart.capitalize()}\n"
+                f"Secondary Muscles: {', '.join([muscle.capitalize() for muscle in self.secondaryMuscles])}\n")
