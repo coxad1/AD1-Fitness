@@ -129,6 +129,56 @@ def search_exercise_by_target_muscle():
     url = f"{EXERCISEDB_BASE_URL}/exercises/target/{target}"
     return url
 
+def program_menu(self, workout_manager):
+    print(f"\nManaging Program: {self.name}")
+    print("Program Menu:\n1. Add Workout\n2. Remove Workout\n3. View Workouts\n4. Exit")
+    while True:
+        self.display_program_menu()
+        choice = input("Enter your choice: ").strip()
+        if choice == '1':
+            workout_name = input("Enter the workout name: ")
+            self.add_workout(workout_name, workout_manager)
+        elif choice == '2':
+            self.display_workouts()
+            try:
+                index = int(input("Enter workout index to remove: ")) - 1
+                self.remove_workout(index)
+            except ValueError:
+                print("Invalid input.")
+        elif choice == '3':
+            self.display_workouts()
+        elif choice == '4':
+            break  
+        else:
+            print("Invalid choice. Try again.")
+
+
+def program_manager_menu(self):
+    while True:
+        print("""\nProgram Manager Menu:
+1. Create Program
+2. Select Program by ID
+3. List Programs
+4. Remove Program
+5. Exit
+""")
+        choice = input("Enter your choice: ").strip()
+
+        if choice == '1':
+            self.create_program()
+        elif choice == '2':
+            selected_program = self.select_program()
+            if selected_program:
+                selected_program.program_menu(self)
+        elif choice == '3':
+            self.list_programs()
+        elif choice == '4':
+            self.remove_program()
+        elif choice == '5':
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
 def workout_menu(workout: WO):
     while True:
         print(f"\nManaging Workout: {workout.name.capitalize()}")

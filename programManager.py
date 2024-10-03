@@ -8,6 +8,7 @@ class ProgramManager:
         self.programs: List[Program] = []
         self.ProgID = 1  # Unique identifier for programs
 
+     # Program Manager methods
     def create_program(self):
         program_name = input("\nEnter program name: ").strip()
         if not program_name:
@@ -20,7 +21,8 @@ class ProgramManager:
         self.programs.append(new_program)
         print(f"\nProgram '{program_name}' created with ID {self.ProgID}.\n")
         self.ProgID += 1
-
+    
+    # List all programs
     def list_programs(self):
         if not self.programs:
             print("No programs available.")
@@ -31,6 +33,7 @@ class ProgramManager:
             table.add_row([program.id, program.name.capitalize()], divider=True)
         print(table)
 
+    # Select a program
     def select_program(self) -> Optional[Program]:
         self.list_programs()
         if not self.programs:
@@ -46,7 +49,8 @@ class ProgramManager:
         except ValueError:
             print("Invalid input. Please enter a number.")
             return None
-
+        
+    # Remove a program
     def remove_program(self):
         self.list_programs()
         if not self.programs:
@@ -61,29 +65,3 @@ class ProgramManager:
             print("Program ID not found.")
         except ValueError:
             print("Invalid input. Please enter a number.")
-
-    def program_manager_menu(self):
-        while True:
-            print("""\nProgram Manager Menu:
-    1. Create Program
-    2. Select Program by ID
-    3. List Programs
-    4. Remove Program
-    5. Exit
-    """)
-            choice = input("Enter your choice: ").strip()
-
-            if choice == '1':
-                self.create_program()
-            elif choice == '2':
-                selected_program = self.select_program()
-                if selected_program:
-                    selected_program.program_menu(self)
-            elif choice == '3':
-                self.list_programs()
-            elif choice == '4':
-                self.remove_program()
-            elif choice == '5':
-                break
-            else:
-                print("Invalid choice. Please try again.")
