@@ -1,4 +1,3 @@
-# workout.py
 from pydantic import BaseModel
 from typing import List
 from exercise import Exercise
