@@ -6,10 +6,7 @@ from exercise import Exercise as EX
 from programManager import ProgramManager as PM
 from workout import Workout as WO
 
-bodyPartTarget = ["back", "cardio", "chest", "lower arms", "lower legs","neck", "shoulders", "upper arms", "upper legs", "waist"]
-equipmentUsed = ["assisted", "band", "barbell", "body weight", "bosu ball","cable", "dumbbell", "elliptical machine", "ez barbell","hammer", "kettlebell", "leverage machine", "medicine ball", "olympic barbell", "resistance band", "roller", "rope", "skierg machine", "sled machine", "smith machine", "stability ball","stationary bike", "stepmill machine", "tire", "trap bar","upper body ergometer", "weighted", "wheel roller"]
-targetMuscle = ["abductors", "abs", "adductors", "biceps", "calves","cardiovascular system", "delts", "forearms", "glutes","hamstrings", "lats", "levator scapulae", "pectorals","quads", "serratus anterior", "spine", "traps","triceps", "upper back"]
-
+# Load environment variables and API keys
 load_dotenv()
 exercise_db_api_key = os.getenv('API_KEY')
 EXERCISEDB_BASE_URL = "https://exercisedb.p.rapidapi.com"
@@ -18,212 +15,161 @@ RAPID_API_HEADERS = {
     'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
 }
 
-# Function to display the exercises in the response should print via the print statement
+bodyPartTarget = ["back", "cardio", "chest", "lower arms", "lower legs","neck", "shoulders", "upper arms", "upper legs", "waist"]
+equipmentUsed = ["assisted", "band", "barbell", "body weight", "bosu ball","cable", "dumbbell", "elliptical machine", "ez barbell","hammer", "kettlebell", "leverage machine", "medicine ball", "olympic barbell", "resistance band", "roller", "rope", "skierg machine", "sled machine", "smith machine", "stability ball","stationary bike", "stepmill machine", "tire", "trap bar","upper body ergometer", "weighted", "wheel roller"]
+targetMuscle = ["abductors", "abs", "adductors", "biceps", "calves","cardiovascular system", "delts", "forearms", "glutes","hamstrings", "lats", "levator scapulae", "pectorals","quads", "serratus anterior", "spine", "traps","triceps", "upper back"]
+
+# API exercise response function
 def exercise_response(exercises):
     if exercises:
-        exercise_list = []
-        for id, exercise_data in enumerate(exercises, start=1):
-            try:
-                exercise = EX(**exercise_data)
-                exercise_list.append(exercise)
-                print(f"{id}. {exercise.name.capitalize()} - Target: {exercise.target.capitalize()} - Body Part: {exercise.bodyPart.capitalize()}")
-            except ValidationError as e:
-                print(f"Error: Invalid data for exercise '{exercise_data.get('name', 'Unknown')}' - {e}")
-        return exercise_list
+        for idx, exercise in enumerate(exercises, start=1):
+            print(f"{idx}. {exercise['name']} - {exercise['target']}")
     else:
-        print("No exercises found. Please try again.")
-        return []
+        print("No exercises found.")
 
-# Function pings the API to get the exercises passes the Headers in the resposne alongside the url adds teh response to the workout
-def get_exercise_api(url):
-    try:
-        response = requests.get(url, headers=RAPID_API_HEADERS)
-        response.raise_for_status()  # Raise an exception for 4xx/5xx status codes
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Request failed: {e}")
-        return None
-
-# Function extends the search function for exercises and add them to the workout
-def select_exercises_to_add(workout: WO):
-    while True:
-        print("""\nSearch Exercises
-                 \n1. Search by Body Part
-                 \n2. Search by Equipment
-                 \n3. Search by Target Muscle
-                 \n4. Search by Name
-                 \n5. Done Adding Exercises""")
-        choice = input("Enter your choice: ").strip()
-
-        if choice == '1':
-            url = search_exercise_by_body_part()
-        elif choice == '2':
-            url = search_exercise_by_equipment()
-        elif choice == '3':
-            url = search_exercise_by_target_muscle()
-        elif choice == '4':
-            url = search_exercise_by_name()
-        elif choice == '5':
-            print("Finished adding exercises.")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-            continue
-
-        exercises = get_exercise_api(url)
-        exercise_list = exercise_response(exercises)
-
-        if not exercise_list:
-            continue
-
-        for id, exercise in enumerate(exercise_list, start=1):
-            while True:
-                add_choice = input(f"Do you want to add '{exercise.name.capitalize()}' to the workout? (y/n): ").strip().lower()
-                if add_choice == 'y':
-                    workout.add_exercise(exercise)
-                    break
-                elif add_choice == 'n':
-                    print(f"Skipped adding '{exercise.name.capitalize()}'.")
-                    break
-                else:
-                    print("Invalid input. Please enter 'y' or 'n'.")
-        print("Exercise search and addition complete.\n")
-
-# Function serves to search for an exercise by name pinging the API
-def search_exercise_by_name():
-    while True:
-        name = input("\nWhat exercise would you like to search for (or type 'exit' to go back)? ").lower()
-        if name == 'exit':
-            print("Returning to the previous menu...")
-            break
-        url = f"{EXERCISEDB_BASE_URL}/exercises/name/{name}"
-        return url
-# Function serves to search for an exercise by body part pinging the API
-def search_exercise_by_body_part():
-    print("\nAvailable Body Parts:")
-    for body_part in bodyPartTarget:
-        print(f"- {body_part.capitalize()}")
-    body_part = input("Enter body part: ").lower()
-    if body_part not in bodyPartTarget:
-        print("Invalid body part. Please choose from the list.")
-        url = f"{EXERCISEDB_BASE_URL}/exercises/bodyPart/{body_part}"
-        return url
-# Function serves to search for an exercise by equipment pinging the API
-def search_exercise_by_equipment():
-    print("\nAvailable Equipment:")
-    for equipment in equipmentUsed:
-        print(f"- {equipment.capitalize()}")
-    equipment = input("\nEnter equipment: ").lower()
-    if equipment not in equipmentUsed:
-        print("Invalid equipment. Please choose from the list.")
-    url = f"{EXERCISEDB_BASE_URL}/exercises/equipment/{equipment}"
-    return url
-# Function serves to search for an exercise by target muscle pinging the API
-def search_exercise_by_target_muscle():
-    print("\nAvailable Target Muscles:")
-    for target in targetMuscle:
-        print(f"- {target.capitalize()}")
-    target = input("Enter target muscle: ").lower()
-    if target not in targetMuscle:
-        print("Invalid target muscle. Please choose from the list.")
+# Fetch exercises based on a search criterion
+def search_exercises_by_target(target):
     url = f"{EXERCISEDB_BASE_URL}/exercises/target/{target}"
-    return url
+    response = requests.get(url, headers=RAPID_API_HEADERS)
+    exercises = response.json()
+    exercise_response(exercises)
+    return exercises
 
-def program_menu(self, workout_manager):
-    print(f"\nManaging Program: {self.name}")
-    print("Program Menu:\n1. Add Workout\n2. Remove Workout\n3. View Workouts\n4. Exit")
-    while True:
-        self.display_program_menu()
-        choice = input("Enter your choice: ").strip()
-        if choice == '1':
-            workout_name = input("Enter the workout name: ")
-            self.add_workout(workout_name, workout_manager)
-        elif choice == '2':
-            self.display_workouts()
-            try:
-                index = int(input("Enter workout index to remove: ")) - 1
-                self.remove_workout(index)
-            except ValueError:
-                print("Invalid input.")
-        elif choice == '3':
-            self.display_workouts()
-        elif choice == '4':
-            break  
+# Function for searching exercises by body part
+def search_exercises_by_bodypart():
+    print("Search by body part:")
+    for idx, bodypart in enumerate(bodyPartTarget, start=1):
+        print(f"{idx}. {bodypart.capitalize()}")
+
+    try:
+        bodypart_choice = int(input("Select a body part: ")) - 1
+        if 0 <= bodypart_choice < len(bodyPartTarget):
+            bodypart = bodyPartTarget[bodypart_choice]
+            url = f"{EXERCISEDB_BASE_URL}/exercises/bodyPart/{bodypart}"
+            response = requests.get(url, headers=RAPID_API_HEADERS)
+            exercises = response.json()
+            exercise_response(exercises)
+            return exercises
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
 
+# Function for searching exercises by equipment
+def search_exercises_by_equipment():
+    print("Search by equipment:")
+    for idx, equipment in enumerate(equipmentUsed, start=1):
+        print(f"{idx}. {equipment.capitalize()}")
 
-def program_manager_menu(self):
+    try:
+        equipment_choice = int(input("Select equipment: ")) - 1
+        if 0 <= equipment_choice < len(equipmentUsed):
+            equipment = equipmentUsed[equipment_choice]
+            url = f"{EXERCISEDB_BASE_URL}/exercises/equipment/{equipment}"
+            response = requests.get(url, headers=RAPID_API_HEADERS)
+            exercises = response.json()
+            exercise_response(exercises)
+            return exercises
+        else:
+            print("Invalid choice.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+# Function to search and optionally add exercises to a workout
+def search_exercises_menu(workout=None):
+    print("\n--- Exercise Search Menu ---")
+    print("1. Search by Target Muscle")
+    print("2. Search by Body Part")
+    print("3. Search by Equipment")
+    print("4. Return to Program Manager Menu")
+
+    choice = input("Choose an option: ").strip()
+
+    if choice == "1":
+        target = input("Enter target muscle: ").strip().lower()
+        exercises = search_exercises_by_target(target)
+    elif choice == "2":
+        exercises = search_exercises_by_bodypart()
+    elif choice == "3":
+        exercises = search_exercises_by_equipment()
+    elif choice == "4":
+        return
+    else:
+        print("Invalid choice.")
+
+    if workout:
+        add_exercise_choice = input("Would you like to add an exercise to the workout? (y/n): ").strip().lower()
+        if add_exercise_choice == "y":
+            selected_idx = int(input("Select an exercise to add: ")) - 1
+            try:
+                selected_exercise = EX(**exercises[selected_idx])
+                workout.add_exercise(selected_exercise)
+            except (ValidationError, IndexError):
+                print("Error adding exercise to the workout.")
+        else:
+            print("Returning to menu...")
+
+# Function for managing workouts
+def workout_menu(pm):
+    selected_workout = pm.select_workout_in_program()
+    if not selected_workout:
+        return
+
     while True:
-        print("""\nProgram Manager Menu:
-1. Create Program
-2. Select Program by ID
-3. List Programs
-4. Remove Program
-5. Exit
-""")
-        choice = input("Enter your choice: ").strip()
+        print("\n--- Manage Workout ---")
+        print("1. View Exercises")
+        print("2. Search and Add Exercises")
+        print("3. Return to Program Manager Menu")
 
-        if choice == '1':
-            self.create_program()
-        elif choice == '2':
-            selected_program = self.select_program()
-            if selected_program:
-                selected_program.program_menu(self)
-        elif choice == '3':
-            self.list_programs()
-        elif choice == '4':
-            self.remove_program()
-        elif choice == '5':
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            selected_workout.display_exercises()
+        elif choice == "2":
+            search_exercises_menu(selected_workout)
+        elif choice == "3":
             break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
 
-def workout_menu(workout: WO):
+# Program Manager Menu (Main Menu)
+def program_manager_menu(pm):
     while True:
-        print(f"\nManaging Workout: {workout.name.capitalize()}")
-        print("""\nWorkout Menu:
-    1. Add Exercise to Workout
-    2. Remove Exercise from Workout
-    3. View Exercises in Workout
-    4. Return to Program Menu
-    """)
+        print("\n--- Program Manager Menu ---")
+        print("1. Search Programs")
+        print("2. Search Available Exercises")
+        print("3. Create New Program")
+        print("4. Add Workout to Program")
+        print("5. Add Exercises to a Workout")
+        print("6. Remove Program")
+        print("7. Exit")
+
         choice = input("Enter your choice: ").strip()
 
-        if choice == '1':
-            select_exercises_to_add(workout)  # Call function to add exercises
-        elif choice == '2':
-            workout.display_exercises()  # Display exercises in the workout
-            if not workout.exercises:
-                continue
-            try:
-                index = int(input("Enter the index of the exercise to remove: ")) - 1
-                workout.remove_exercise(index)  # Remove the exercise by index
-            except ValueError:
-                print("Invalid input. Please enter a number.")
-        elif choice == '3':
-            workout.display_exercises()  # Display exercises
-        elif choice == '4':
-            break  # Exit the workout menu
+        if choice == "1":
+            pm.list_programs()
+        elif choice == "2":
+            search_exercises_menu()
+        elif choice == "3":
+            program_name = input("Enter new program name: ").strip()
+            pm.create_program(program_name)
+        elif choice == "4":
+            pm.add_workout_to_program()
+        elif choice == "5":
+            workout_menu(pm)
+        elif choice == "6":
+            pm.remove_program()
+        elif choice == "7":
+            print("Exiting application.")
+            break
         else:
-            print("Invalid choice. Please try again.")
+            print("Invalid choice, please try again.")
 
+# Main function to initialize and run the program
 def main():
-    program_manager = PM()
-    while True:
-        print("""\nMain Menu:
-              \n1. Manage Programs\
-              \n2. Exit
-              \n""")
-        choice = input("Enter your choice: ").strip()
+    pm = PM()  # Initialize ProgramManager
+    program_manager_menu(pm)  # Start Program Manager Menu
 
-        if choice == '1':
-            program_manager.program_manager_menu()
-        elif choice == '2':
-            print("Exiting program...")
-            break
-        else:
-            print("Invalid choice. Please try again.")
-
+# Entry point for the program
 if __name__ == "__main__":
     main()

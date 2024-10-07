@@ -1,31 +1,30 @@
-from pydantic import BaseModel
 from typing import List
 from workout import Workout
 from prettytable import PrettyTable
 
-class Program(BaseModel):
-    name: str
-    id: int
-    workouts: List[Workout] = []
-    
+class Program:
+    def __init__(self, name: str, id: int):
+        self.name = name
+        self.id = id
+        self.workouts: List[Workout] = []  # Initialize an empty list of workouts
+
     # Add a workout to the program if it doesn't already exist
-    def add_workout(self, workout_name: str, program_manager):
+    def add_workout(self, workout_name: str):
         if any(w.name.lower() == workout_name.lower() for w in self.workouts):
             print(f"Workout '{workout_name}' already exists in the program.")
             return
         new_workout = Workout(name=workout_name)
         self.workouts.append(new_workout)
         print(f"Workout '{workout_name}' added to program '{self.name}'.")
+
     # Remove a workout from the program by index
     def remove_workout(self, index: int):
-        try:
-            if 0 <= index < len(self.workouts):
-                removed = self.workouts.pop(index)
-                print(f"Workout '{removed.name}' removed from the program.")
-            else:
-                print("Invalid workout index.")
-        except ValueError:
-            print("Please enter a valid index number.")
+        if 0 <= index < len(self.workouts):
+            removed = self.workouts.pop(index)
+            print(f"Workout '{removed.name}' removed from the program.")
+        else:
+            print("Invalid workout index.")
+
     # Display all workouts in the program with their exercises count
     def display_workouts(self):
         if not self.workouts:

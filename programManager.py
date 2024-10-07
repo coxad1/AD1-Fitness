@@ -1,4 +1,3 @@
-from pydantic import BaseModel
 from typing import List, Optional
 from program import Program
 from prettytable import PrettyTable
@@ -8,9 +7,8 @@ class ProgramManager:
         self.programs: List[Program] = []
         self.ProgID = 1  # Unique identifier for programs
 
-     # Program Manager methods
-    def create_program(self):
-        program_name = input("\nEnter program name: ").strip()
+    # Create a new program and add it to the list
+    def create_program(self, program_name: str):
         if not program_name:
             print("Program name cannot be empty.")
             return
@@ -22,7 +20,7 @@ class ProgramManager:
         print(f"\nProgram '{program_name}' created with ID {self.ProgID}.\n")
         self.ProgID += 1
     
-    # List all programs
+    # List all programs in a table
     def list_programs(self):
         if not self.programs:
             print("No programs available.")
@@ -30,10 +28,10 @@ class ProgramManager:
         table = PrettyTable()
         table.field_names = ["Program ID", "Program Name"]
         for program in self.programs:
-            table.add_row([program.id, program.name.capitalize()], divider=True)
+            table.add_row([program.id, program.name.capitalize()])
         print(table)
 
-    # Select a program
+    # Select a program by its ID
     def select_program(self) -> Optional[Program]:
         self.list_programs()
         if not self.programs:
@@ -50,7 +48,7 @@ class ProgramManager:
             print("Invalid input. Please enter a number.")
             return None
         
-    # Remove a program
+    # Remove a program by its ID
     def remove_program(self):
         self.list_programs()
         if not self.programs:
@@ -65,3 +63,13 @@ class ProgramManager:
             print("Program ID not found.")
         except ValueError:
             print("Invalid input. Please enter a number.")
+    
+    # Add a workout to a selected program
+    def add_workout_to_program(self):
+        selected_program = self.select_program()
+        if selected_program:
+            workout_name = input("Enter workout name: ").strip()
+            if workout_name:
+                selected_program.add_workout(workout_name)
+            else:
+                print("Workout name cannot be empty.")

@@ -3,9 +3,11 @@ from typing import List
 from exercise import Exercise
 from prettytable import PrettyTable
 
-class Workout(BaseModel):
-    name: str
-    exercises: List[Exercise] = []
+class Workout:
+      
+    def __init__(self, name: str):
+        self.name = name
+        self.exercises: List[Exercise] = []  # Initialize an empty list of exercises
 
     def add_exercise(self, exercise: Exercise):
         if any(ex.name.lower() == exercise.name.lower() for ex in self.exercises):
