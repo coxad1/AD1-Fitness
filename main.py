@@ -25,8 +25,8 @@ def fetch_and_display_exercises(url):
         response = requests.get(url, headers=RAPID_API_HEADERS)
         response.raise_for_status()
         exercises_data = response.json() 
-        exercises = [Exercise(**exercise) for exercise in exercises_data]
-        display_exercises_table(exercises)
+        exercises = [Exercise(**exercise) for exercise in exercises_data] # Parse the exercise data into Exercise objects
+        display_exercises_table(exercises) # Display the exercises in a table format
         return exercises
     except ValidationError as e:
         print(f"Error fetching exercises: {e}")
@@ -77,8 +77,7 @@ def add_exercise_to_workout(pm, exercises):
                     exercise_index = int(input("Enter the number of the exercise to add from the search results: ")) - 1
                     if 0 <= exercise_index < len(exercises):
                         selected_exercise = exercises[exercise_index]
-                        selected_workout.add_exercise(selected_exercise)  
-                        print(f"Exercise '{selected_exercise.name}' added to workout '{selected_workout.name}'.")
+                        selected_workout.add_exercise(selected_exercise)  # Add the selected exercise to the workout
                     else:
                         print("Invalid exercise number. Please enter a valid exercise index.")
                 else:
@@ -91,7 +90,7 @@ def add_exercise_to_workout(pm, exercises):
         else:
             print("Invalid choice. Please enter 'y' to add an exercise or 'n' to return to the search menu.")
 
-# Function to add a workout to a program
+# Function to add a workout to a program with day-of-the-week selection
 def add_workout_to_program(program, pm):
     if not pm.workouts:
         print("No workouts available to add. Please create a workout first.")
@@ -106,10 +105,12 @@ def add_workout_to_program(program, pm):
             print("Returning to the program modification menu.")
         elif 0 <= workout_index < len(pm.workouts):
             selected_workout = pm.workouts[workout_index]
-            program.add_workout(selected_workout)
-            print(f"Workout '{selected_workout.name}' has been added to the program '{program.name}'.")
+            print("""\n--- Select a Day of the Week ---\n Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday""")
+            selected_day = input("Enter the day of the week to schedule the workout: ").strip().capitalize()
+            program.add_workout(selected_workout, selected_day)
+            print(f"Workout '{selected_workout.name}' has been scheduled on {selected_day} for the program '{program.name}'.")
         else:
-            print("Invalid workout number. Please enter a valid workout index.")
+            print("Invalid day selection. Please enter a number between 1 and 7.")
     except ValueError:
         print("Please enter a valid number.")
 
@@ -129,7 +130,7 @@ def search_by_target():
         print(f"{index}. {muscle.capitalize()}")
     while True:
         target_muscle = input("Enter the target muscle to search for exercises (e.g., biceps, quadriceps): ").strip().lower()
-        if target_muscle:  # Ensure the user entered a value
+        if target_muscle in targetMuscle:  # Ensure the user entered a value
             url = f"{EXERCISEDB_BASE_URL}/exercises/target/{target_muscle}"
             return fetch_and_display_exercises(url)
         else:
@@ -141,7 +142,7 @@ def search_by_equipment():
         print(f"{index}. {equipment.capitalize()}")
     while True:
         equipment = input("Enter the equipment to search for exercises (e.g., dumbbell, barbell): ").strip().lower()
-        if equipment:  # Ensure the user entered a value
+        if equipment in equipmentUsed:  # Ensure the user entered a value
             url = f"{EXERCISEDB_BASE_URL}/exercises/equipment/{equipment}"
             return fetch_and_display_exercises(url)
         else:
@@ -153,7 +154,7 @@ def search_by_body_part():
         print(f"{index}. {body_part.capitalize()}")
     while True:
         body_part = input("Enter the body part to search for exercises (e.g., chest, legs, arms): ").strip().lower()
-        if body_part:  #
+        if body_part in bodyPartTarget:  #
             url = f"{EXERCISEDB_BASE_URL}/exercises/bodyPart/{body_part}"
             return fetch_and_display_exercises(url)
         else:
@@ -180,13 +181,12 @@ def primary_menu(pm):
                  \n2. Create a New Workout
                  \n3. View All Programs
                  \n4. View All Workouts
-                 \n5. Add Workouts to a Program
-                 \n6. Modify a Program (View or Remove Workouts)
-                 \n7. Modify a Workout (View or Remove Exercises)
-                 \n8. Search for Exercises
-                 \n9. Export a Program
-                 \n10. Remove a Program
-                 \n11. Exit the Application""")
+                 \n5. Modify a Program (View or Remove Workouts)
+                 \n6. Modify a Workout (View or Remove Exercises)
+                 \n7. Search for Exercises
+                 \n8. Export a Program
+                 \n9. Remove a Program
+                 \n10. Exit the Application""")
 
         choice = input("Enter your choice (1-11): ").strip()
         if choice == "1":
@@ -199,20 +199,18 @@ def primary_menu(pm):
         elif choice == "4":
             pm.list_workouts()
         elif choice == "5":
-            pm.add_workout_to_program()
-        elif choice == "6":
             modify_program_menu(pm)
-        elif choice == "7":
+        elif choice == "6":
             modify_workout_menu(pm)
-        elif choice == "8":
+        elif choice == "7":
             search_exercises_menu(pm)
-        elif choice == "9":
+        elif choice == "8":
             export_program_menu(pm)
-        elif choice == "10":
+        elif choice == "9":
             pm.display_programs()
             program_id = int(input("Enter the ID of the program to remove: ")) - 1
             pm.remove_program(program_id)
-        elif choice == "11":
+        elif choice == "10":
             print("Thank you for using the Personal Training Program Builder. Goodbye!")
             break
         else:
@@ -299,40 +297,46 @@ def export_program_menu(pm):
     except ValueError:
         print("Please enter a valid number.")
 
-# Function to export a program to a text file
+# Function to export tabled program
 def export_program(program):
     file_name = f"{program.name}_Program.txt"
     with open(file_name, 'w') as file:
         file.write(f"--- {program.name} Program ---\n\n")
 
-        for workout in program.workouts:
-            file.write(f"Workout: {workout.name}\n")
-            file.write("Exercises:\n")
+        for day, workouts in program.workouts_by_day.items():
+            file.write(f"--- {day} ---\n")
+            if workouts:
+                for workout in workouts:
+                    file.write(f"Workout: {workout.name}\n")
+                    file.write("Exercises:\n")
 
-            # Create a PrettyTable for the exercises
-            table = PrettyTable()
-            table.field_names = ["Exercise Name", "Target Muscle", "Equipment", "Secondary Muscles", "GIF URL"]
+                    # Create a PrettyTable for the exercises
+                    table = PrettyTable()
+                    table.field_names = ["Exercise Name", "Target Muscle", "Equipment", "Secondary Muscles", "GIF URL"]
 
-            for exercise in workout.exercises:
-                secondary_muscles = ', '.join(exercise.secondaryMuscles) if exercise.secondaryMuscles else "N/A"
-                table.add_row([
-                    exercise.name.capitalize(),
-                    exercise.target.capitalize(),
-                    exercise.equipment.capitalize(),
-                    secondary_muscles,
-                    exercise.gifUrl
-                ])
-                for set_number in range(1,4): 
-                    table.add_row([
-                        f"  Set {set_number}",
-                        f"Reps: [   ]",
-                        f"Weight: [   ]",
-                        "",  # Empty cells for the secondary muscles and GIF URL columns
-                        ""
-                    ])
-            # Write the PrettyTable to the file
-            file.write(table.get_string())
-            file.write("\n\n")
+                    for exercise in workout.exercises:
+                        secondary_muscles = ', '.join(exercise.secondaryMuscles) if exercise.secondaryMuscles else "N/A"
+                        table.add_row([
+                            exercise.name.capitalize(),
+                            exercise.target.capitalize(),
+                            exercise.equipment.capitalize(),
+                            secondary_muscles,
+                            exercise.gifUrl
+                        ])
+                        for set_number in range(1, 4): 
+                            table.add_row([
+                                f"  Set {set_number}",
+                                f"Reps: [   ]",
+                                f"Weight: [   ]",
+                                "",  # Empty cells for the secondary muscles and GIF URL columns
+                                ""
+                            ])
+                    # Write the PrettyTable to the file
+                    file.write(table.get_string())
+                    file.write("\n")
+            else:
+                file.write("Rest\n")
+            file.write("\n")  # Newline between days for clarity
 
     print(f"Program successfully exported to {file_name}.")
 

@@ -20,7 +20,7 @@ class ProgramManager:
             return
         new_program = Program(name=program_name, id=self.ProgID)
         self.programs.append(new_program)
-        print(f"\\nProgram '{program_name}' created with ID {self.ProgID}.\\n")
+        print(f"\nProgram '{program_name}' created with ID {self.ProgID}.\n")
         self.ProgID += 1
 
     # Display all programs
