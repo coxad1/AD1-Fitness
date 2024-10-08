@@ -1,6 +1,6 @@
 from pydantic import BaseModel, HttpUrl
 from typing import List
-
+# Base model class to take in the JSON response and format it into a class object
 class Exercise(BaseModel):
     bodyPart: str
     equipment: str

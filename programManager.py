@@ -1,11 +1,14 @@
-from typing import List, Optional
+from typing import List
 from program import Program
 from prettytable import PrettyTable
+from program import Program
+from workout import Workout
 
 class ProgramManager:
     def __init__(self):
         self.programs: List[Program] = []
-        self.ProgID = 1  # Unique identifier for programs
+        self.workouts: List[Workout] = []  
+        self.ProgID = len(self.programs) + 1
 
     # Create a new program and add it to the list
     def create_program(self, program_name: str):
@@ -17,59 +20,44 @@ class ProgramManager:
             return
         new_program = Program(name=program_name, id=self.ProgID)
         self.programs.append(new_program)
-        print(f"\nProgram '{program_name}' created with ID {self.ProgID}.\n")
+        print(f"\\nProgram '{program_name}' created with ID {self.ProgID}.\\n")
         self.ProgID += 1
-    
-    # List all programs in a table
-    def list_programs(self):
+
+    # Display all programs
+    def display_programs(self):
         if not self.programs:
             print("No programs available.")
-            return
-        table = PrettyTable()
-        table.field_names = ["Program ID", "Program Name"]
-        for program in self.programs:
-            table.add_row([program.id, program.name.capitalize()])
-        print(table)
+        else:
+            table = PrettyTable()
+            table.field_names = ["No.", "Program Name", "ID"]
+            for idx, program in enumerate(self.programs, start=1):
+                table.add_row([idx, program.name, program.id])
+            print(table)
 
-    # Select a program by its ID
-    def select_program(self) -> Optional[Program]:
-        self.list_programs()
-        if not self.programs:
-            return None
-        try:
-            choice = int(input("Enter Program ID to select: ").strip())
-            for program in self.programs:
-                if program.id == choice:
-                    print(f"\nSelected Program: {program.name.capitalize()}\n")
-                    return program
-            print("Invalid Program ID.")
-            return None
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-            return None
-        
-    # Remove a program by its ID
-    def remove_program(self):
-        self.list_programs()
-        if not self.programs:
-            return
-        try:
-            choice = int(input("Enter Program ID to remove: ").strip())
-            for idx, program in enumerate(self.programs):
-                if program.id == choice:
-                    removed = self.programs.pop(idx)
-                    print(f"Program '{removed.name}' removed successfully.")
-                    return
-            print("Program ID not found.")
-        except ValueError:
-            print("Invalid input. Please enter a number.")
-    
-    # Add a workout to a selected program
-    def add_workout_to_program(self):
-        selected_program = self.select_program()
-        if selected_program:
-            workout_name = input("Enter workout name: ").strip()
-            if workout_name:
-                selected_program.add_workout(workout_name)
+        def remove_program(self, program_id: int):
+            if 0 <= program_id < len(self.programs):
+                removed_program = self.programs.pop(program_id)
+                print(f"Program '{removed_program.name}' has been successfully removed.")
             else:
-                print("Workout name cannot be empty.")
+                print("Invalid program ID. Please enter a valid program number.")
+
+    # Create a new workout and add it to the global list of workouts
+    def create_workout(self):
+        workout_name = input("Enter the name of the new workout: ").strip()
+        if workout_name:
+            new_workout = Workout(workout_name)
+            self.workouts.append(new_workout)
+            print(f"Workout '{workout_name}' created successfully and added to the global list of workouts.")
+        else:
+            print("Workout name cannot be empty.")
+
+    # List all global workouts
+    def list_workouts(self):
+        if not self.workouts:
+            print("No workouts available.")
+        else:
+            table = PrettyTable()
+            table.field_names = ["No.", "Workout Name"]
+            for idx, workout in enumerate(self.workouts, start=1):
+                table.add_row([idx, workout.name])
+            print(table)
