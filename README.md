@@ -17,3 +17,5 @@ Requirements
 
 Python 3.8+
 ExerciseDB API key (via RapidAPI)
+
+Strengt.txt shows example output for a program
