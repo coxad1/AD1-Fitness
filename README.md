@@ -19,3 +19,9 @@ Python 3.8+
 ExerciseDB API key (via RapidAPI)
 
 Strengt.txt shows example output for a program
+
+## Issues
+API Requests limited to 10 per time, using certain functionalities may be more difficult
+Would have used a GUI to separate logic out if doing this again
+API key was problematic in regards to using RapidAPI 
+Other issues are noted in commit history
