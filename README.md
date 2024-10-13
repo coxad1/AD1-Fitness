@@ -1,10 +1,10 @@
-Lab 4 CSCI 2910
+## Lab 4 CSCI 2910
 
-Overview
+## Overview
 
 This Personal Training Program Builder application is a Python-based fitness management tool. It allows users to create, manage, and customize personal workout plans and training programs. The app leverages the ExerciseDB API to fetch detailed exercise information and offers functionality to search for exercises, build workouts, and generate weekly programs. Additionally, it supports exporting these programs as text files for easy tracking.
 
-Features
+## Features
 
 Search Exercises: Query exercises by body part, equipment, or target muscle.
 Create Workouts: Assemble exercises into workouts and associate them with specific days of the week.
@@ -13,7 +13,7 @@ Export Programs: Generate a text file containing the entire program, including e
 Integrates with ExerciseDB API: Fetch and display exercise data using the ExerciseDB API.
 
 
-Requirements
+## Requirements
 
 Python 3.8+
 ExerciseDB API key (via RapidAPI)
