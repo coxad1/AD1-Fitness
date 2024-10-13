@@ -1,0 +1,98 @@
+--- Strength Program ---
+
+--- Monday ---
+Workout: Leg Day
+Exercises:
++--------------------------------------+---------------+------------------+--------------------------------------+-----------------------------------------------+
+|            Exercise Name             | Target Muscle |    Equipment     |          Secondary Muscles           |                    GIF URL                    |
++--------------------------------------+---------------+------------------+--------------------------------------+-----------------------------------------------+
+|          Barbell full squat          |     Glutes    |     Barbell      | quadriceps, hamstrings, calves, core | https://v2.exercisedb.io/image/Nmse-pqtE6h63l |
+|                 Set 1                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 2                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 3                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|      Barbell romanian deadlift       |     Glutes    |     Barbell      |        hamstrings, lower back        | https://v2.exercisedb.io/image/Ct0FcJGehIipJF |
+|                 Set 1                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 2                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 3                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|         Lever leg extension          |     Quads     | Leverage machine |              hamstrings              | https://v2.exercisedb.io/image/ngULcBFfV0QDq0 |
+|                 Set 1                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 2                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 3                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+| Assisted side lying adductor stretch |   Adductors   |     Assisted     |          hamstrings, glutes          | https://v2.exercisedb.io/image/t-yzIQFpdxrK6I |
+|                 Set 1                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 2                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 3                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|      Barbell seated calf raise       |     Calves    |     Barbell      |              hamstrings              | https://v2.exercisedb.io/image/A1enAtPz984zVQ |
+|                 Set 1                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 2                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
+|                 Set 3                |  Reps: [   ]  |  Weight: [   ]   |                                      |                                               |
++--------------------------------------+---------------+------------------+--------------------------------------+-----------------------------------------------+
+
+--- Tuesday ---
+Rest
+
+--- Wednesday ---
+Workout: Pull Day
+Exercises:
++----------------------------+---------------+------------------+----------------------------------+-----------------------------------------------+
+|       Exercise Name        | Target Muscle |    Equipment     |        Secondary Muscles         |                    GIF URL                    |
++----------------------------+---------------+------------------+----------------------------------+-----------------------------------------------+
+| Cable bar lateral pulldown |      Lats     |      Cable       | biceps, rhomboids, rear deltoids | https://v2.exercisedb.io/image/A3cSSA6ngkrdKh |
+|            Set 1           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 2           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 3           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|  Cable concentration curl  |     Biceps    |      Cable       |             forearms             | https://v2.exercisedb.io/image/9ng0lTEcw8IQfP |
+|            Set 1           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 2           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 3           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|      Cable seated row      |   Upper back  |      Cable       |         biceps, forearms         | https://v2.exercisedb.io/image/g5vtpiQfk2TC9y |
+|            Set 1           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 2           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 3           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|        Barbell curl        |     Biceps    |     Barbell      |             forearms             | https://v2.exercisedb.io/image/59YKqEVZBdyqHP |
+|            Set 1           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 2           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 3           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|  Lever reverse t-bar row   |   Upper back  | Leverage machine |         biceps, forearms         | https://v2.exercisedb.io/image/5wVDXntG0k3fhw |
+|            Set 1           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 2           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
+|            Set 3           |  Reps: [   ]  |  Weight: [   ]   |                                  |                                               |
++----------------------------+---------------+------------------+----------------------------------+-----------------------------------------------+
+
+--- Thursday ---
+Rest
+
+--- Friday ---
+Workout: Push Day
+Exercises:
++---------------------------------------------+---------------+---------------+--------------------+-----------------------------------------------+
+|                Exercise Name                | Target Muscle |   Equipment   | Secondary Muscles  |                    GIF URL                    |
++---------------------------------------------+---------------+---------------+--------------------+-----------------------------------------------+
+|             Barbell bench press             |   Pectorals   |    Barbell    | triceps, shoulders | https://v2.exercisedb.io/image/qMBDrR9wiip-HG |
+|                     Set 1                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 2                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 3                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+| Cable high pulley overhead tricep extension |    Triceps    |     Cable     |     shoulders      | https://v2.exercisedb.io/image/Hw8KbQ5itjR7Ij |
+|                     Set 1                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 2                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 3                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|       Cable one arm decline chest fly       |   Pectorals   |     Cable     | shoulders, triceps | https://v2.exercisedb.io/image/-3h96DZ2PQaIua |
+|                     Set 1                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 2                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 3                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|        Cable one arm tricep pushdown        |    Triceps    |     Cable     |      forearms      | https://v2.exercisedb.io/image/Y44eoySMdZNf4U |
+|                     Set 1                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 2                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 3                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|         Cable one arm incline press         |   Pectorals   |     Cable     | deltoids, triceps  | https://v2.exercisedb.io/image/udOe5-5QrLz4tR |
+|                     Set 1                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 2                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
+|                     Set 3                   |  Reps: [   ]  | Weight: [   ] |                    |                                               |
++---------------------------------------------+---------------+---------------+--------------------+-----------------------------------------------+
+
+--- Saturday ---
+Rest
+
+--- Sunday ---
+Rest
+
